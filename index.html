@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>المكتبة الإسلامية - التصميم المعتمد</title>
+    <title>المكتبة الإسلامية</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Amiri:wght@700&family=Tajawal:wght@400;700&display=swap');
         
@@ -21,7 +21,7 @@
             display: flex; flex-direction: column; align-items: center;
         }
 
-        /* أيقونة الهندسة التفاعلية (أعلى اليسار) */
+        /* أيقونة الهندسة التفاعلية */
         .engineer-icon {
             position: absolute; top: 20px; left: 20px;
             width: 45px; height: 45px; border-radius: 50%;
@@ -34,11 +34,10 @@
         .engineer-icon::before { content: '⚙️'; font-size: 22px; }
         .engineer-icon:hover { transform: rotate(180deg) scale(1.1); box-shadow: 0 0 25px var(--primary); }
 
-        /* اللوجو الرئيسي الدائري بالصورة الجديدة */
+        /* اللوجو الرئيسي - مع تأثير التكبير */
         .main-logo-area {
             flex: 1; display: flex; flex-direction: column;
             align-items: center; justify-content: center;
-            margin-top: 20px;
         }
         
         .circle-logo {
@@ -46,15 +45,13 @@
             border-radius: 50%; 
             border: 5px solid var(--primary); 
             background: #000;
-            overflow: hidden; /* لضمان أن الصورة تكون دائرية */
+            overflow: hidden;
             display: flex; align-items: center; justify-content: center;
             box-shadow: 0 0 40px var(--glow); 
             transition: 0.5s ease-in-out;
         }
-        .circle-logo img {
-            width: 100%; height: 100%; object-fit: cover; /* لملء الدائرة بالصورة بشكل مرتب */
-        }
-        .circle-logo:hover { transform: scale(1.05); box-shadow: 0 0 60px var(--primary); }
+        .circle-logo img { width: 100%; height: 100%; object-fit: cover; }
+        .circle-logo:hover { transform: scale(1.1); box-shadow: 0 0 60px var(--primary); }
 
         h1 {
             font-family: 'Amiri', serif; font-size: 2.5rem;
@@ -62,15 +59,22 @@
             margin-top: 20px;
         }
 
-        /* الأزرار السفلية داخل البرواز */
+        /* الأزرار السفلية - مرفوعة عن الحافة */
+        .bottom-nav-wrapper {
+            margin-bottom: 80px; /* المسافة من الأسفل */
+        }
+
         .bottom-nav {
-            margin-bottom: 50px; background: rgba(255, 255, 255, 0.04);
+            background: rgba(255, 255, 255, 0.04);
             border: 1px solid rgba(212, 175, 55, 0.4); padding: 15px 40px;
             border-radius: 60px; box-shadow: 0 15px 35px rgba(0,0,0,0.6);
             display: flex; gap: 40px;
+            backdrop-filter: blur(10px);
         }
 
         .card { cursor: pointer; text-align: center; transition: 0.4s; }
+        
+        /* تأثير الدوران للأزرار الصغيرة */
         .mini-btn {
             width: 75px; height: 75px; border: 2px solid var(--primary);
             border-radius: 50%; display: flex; align-items: center;
@@ -83,7 +87,7 @@
         .card:hover .mini-btn { transform: rotate(360deg) scale(1.1); box-shadow: 0 0 25px var(--primary); }
         .card span { color: var(--primary); font-weight: bold; font-size: 0.85rem; display: block; margin-top: 8px; }
 
-        /* نافذة العرض وسر الإغلاق */
+        /* نافذة العرض */
         #appOverlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; display: none; z-index: 1000; }
         .close-icon {
             position: absolute; top: 15px; right: 15px;
@@ -115,9 +119,8 @@
     <div class="designer-modal" id="designerModal">
         <div style="font-size: 40px; margin-bottom: 10px;">⚙️</div>
         <h2 style="color: var(--primary); margin: 0;"> المطور</h2>
-        <p style="color: #bbb; font-size: 0.9rem; line-height: 1.5;">تم تصميم هذا النظام ليكون مرجعاً للقران سهلاً ومبسطاً.<br> صدقه عن والدية الله لايحرمكم ولا يحرمني الاجر نسألكم الدعاء.</p>
-        <p style="color: #bbb; font-size: 0.9rem; line-height: 1.5;">مع تحيات / محمد العلالي<br>لتواصل 0505453376</p>
-
+        <p style="color: #bbb; font-size: 0.9rem; line-height: 1.5;">تم تصميم هذا النظام ليكون مرجعاً للقرآن سهلاً ومبسطاً.<br> صدقة عن والديّ، غفر الله لهما.</p>
+        <p style="color: #bbb; font-size: 0.9rem; line-height: 1.5;">مع تحيات / محمد العلالي<br>0505453376</p>
         <div class="close-modal-btn" onclick="toggleModal()">إغلاق</div>
     </div>
 
@@ -128,14 +131,16 @@
         <h1>المكتبة الإسلامية</h1>
     </div>
 
-    <div class="bottom-nav">
-        <div class="card" onclick="runApp('quran.html')">
-            <div class="mini-btn"><img src="https://i.ibb.co/8LXwwR6Q/images.jpg"></div>
-            <span>مصحف النخبة</span>
-        </div>
-        <div class="card" onclick="runApp('repeat.html')">
-            <div class="mini-btn"><img src="https://i.ibb.co/8LXwwR6Q/images.jpg"></div>
-            <span>مصحف التكرار</span>
+    <div class="bottom-nav-wrapper">
+        <div class="bottom-nav">
+            <div class="card" onclick="runApp('quran.html')">
+                <div class="mini-btn"><img src="https://i.ibb.co/8LXwwR6Q/images.jpg"></div>
+                <span>مصحف النخبة</span>
+            </div>
+            <div class="card" onclick="runApp('repeat.html')">
+                <div class="mini-btn"><img src="https://i.ibb.co/8LXwwR6Q/images.jpg"></div>
+                <span>مصحف التكرار</span>
+            </div>
         </div>
     </div>
 
