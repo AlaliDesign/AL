@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>مصحف النخبة</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap');
+        
+        :root {
+            --bg-body: #fdfbf7;
+            --bg-card: #ffffff;
+            --text-main: #5d7c6d;
+            --header-bg: #ffffff;
+            --gold-border: #e2d1b1;
+            --accent-color: #8fb9a8;
+            --item-text: #444;
+        }
+
+        body.dark-mode {
+            --bg-body: #1a1a1a;
+            --bg-card: #2d2d2d;
+            --text-main: #d4af37;
+            --header-bg: #222222;
+            --gold-border: #444;
+            --item-text: #eee;
+        }
+
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background-color: var(--bg-body);
+            margin: 0; display: flex; flex-direction: column;
+            height: 100vh; overflow: hidden; transition: all 0.4s ease;
+        }
+
+        header {
+            background: var(--header-bg);
+            padding: 20px 15px;
+            display: flex; flex-direction: column;
+            align-items: center; justify-content: center;
+            border-bottom: 2px solid var(--gold-border);
+            position: relative;
+        }
+
+        .night-mode-btn {
+            position: absolute; left: 15px; top: 20px;
+            background: var(--bg-card); border: 1px solid var(--gold-border);
+            border-radius: 50%; width: 40px; height: 40px; cursor: pointer;
+            display: flex; align-items: center; justify-content: center; font-size: 1.2rem;
+        }
+
+        #mainLogo { 
+            width: 65px; height: 65px; border-radius: 50%; 
+            border: 3px solid var(--gold-border); margin-bottom: 8px;
+        }
+
+        .app-title { font-weight: 700; color: var(--text-main); font-size: 1.4rem; }
+
+        .color-palette {
+            display: flex; justify-content: center; gap: 12px; padding: 15px;
+        }
+        .color-dot {
+            width: 30px; height: 30px; border-radius: 50%;
+            border: 2px solid white; cursor: pointer; box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+        }
+
+        .fixed-controls { padding: 0 20px 10px 20px; }
+        .action-bar {
+            background: var(--accent-color); color: white; 
+            border-radius: 12px; cursor: pointer; text-align: center;
+        }
+        .folder-btn { padding: 12px; font-weight: bold; }
+
+        .scrollable-content {
+            flex-grow: 1; overflow-y: auto; padding: 0 20px 120px 20px;
+        }
+
+        #qariMenu {
+            display: none; grid-template-columns: repeat(2, 1fr); gap: 15px; animation: fadeIn 0.4s;
+        }
+        .qari-card {
+            background: var(--bg-card); padding: 15px; border-radius: 15px;
+            text-align: center; border: 1px solid var(--gold-border);
+        }
+        .qari-img { width: 70px; height: 70px; border-radius: 50%; margin-bottom: 8px; border: 2px solid var(--accent-color); }
+
+        .surah-item { 
+            padding: 15px; border-bottom: 1px solid var(--gold-border); 
+            display: flex; justify-content: space-between; color: var(--item-text);
+            cursor: pointer;
+        }
+
+        .designer-credit {
+            text-align: center; padding: 15px; font-size: 0.8rem;
+            color: var(--text-main); opacity: 0.8; font-weight: bold;
+        }
+
+        /* المشغل المطور */
+        .modern-player {
+            position: fixed; bottom: -250px; left: 50%; transform: translateX(-50%);
+            width: 90%; max-width: 400px; background: var(--accent-color);
+            border-radius: 20px; padding: 15px; z-index: 2000; transition: bottom 0.5s;
+            box-shadow: 0 -5px 15px rgba(0,0,0,0.2);
+        }
+        .modern-player.active { bottom: 20px; }
+        .player-header { display: flex; justify-content: space-between; color: white; margin-bottom: 10px; }
+        #pTitle { font-weight: bold; font-size: 0.95rem; }
+        #pQari { font-size: 0.8rem; opacity: 0.9; margin-top: 2px; }
+        audio { width: 100%; height: 40px; }
+
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    </style>
+</head>
+<body>
+
+<header>
+    <button class="night-mode-btn" onclick="toggleNightMode()" id="nightBtn">🌙</button>
+    <img id="mainLogo" src="https://i.ibb.co/VcxPddNS/image.jpg" alt="Logo">
+    <div class="app-title">مصحف النخبة</div>
+</header>
+
+<div class="color-palette">
+    <div class="color-dot" style="background: #8fb9a8;" onclick="setTheme('#8fb9a8', '#fdfbf7')"></div>
+    <div class="color-dot" style="background: #f1adad;" onclick="setTheme('#f1adad', '#fff9f9')"></div>
+    <div class="color-dot" style="background: #94b3d8;" onclick="setTheme('#94b3d8', '#f7faff')"></div>
+    <div class="color-dot" style="background: #e9c46a;" onclick="setTheme('#e9c46a', '#fffdf5')"></div>
+</div>
+
+<div class="fixed-controls">
+    <div class="action-bar" onclick="toggleMenu()">
+        <div class="folder-btn" id="mainBtnText">✨ القراء والقوائم</div>
+    </div>
+</div>
+
+<div class="scrollable-content" id="scrollArea">
+    <div id="qariMenu"></div>
+    <div id="selectedQariArea" style="display:none;">
+        <div id="surahList"></div>
+    </div>
+    <div class="designer-credit">تصميم وتطوير: م/العلالي ✨</div>
+</div>
+
+<div class="modern-player" id="pBar">
+    <div class="player-header">
+        <div>
+            <div id="pTitle">جاري التحميل...</div>
+            <div id="pQari"></div>
+        </div>
+        <div onclick="closePlayer()" style="cursor:pointer; font-size: 1.2rem;">✕</div>
+    </div>
+    <audio id="audio" controls></audio>
+</div>
+
+<script>
+    const surahNames = ["الفاتحة","البقرة","آل عمران","النساء","المائدة","الأنعام","الأعراف","الأنفال","التوبة","يونس","هود","يوسف","الرعد","إبراهيم","الحجر","النحل","الإسراء","الكهف","مريم","طه","الأنبياء","الحج","المؤمنون","النور","الفرقان","الشعراء","النمل","القصص","العنكبوت","الروم","لقمان","السجدة","الأحزاب","سبأ","فاطر","يس","الصافات","ص","الزمر","غافر","فصلت","الشورى","الزخرف","الدخان","الجاثية","الأحقاف","محمد","الفتح","الحجرات","ق","الذاريات","الطور","النجم","القمر","الرحمن","الواقعة","الحديد","المجادلة","الحشر","الممتحنة","الصف","الجمعة","المنافقون","التغابن","الطلاق","التحريم","الملك","القلّم","الحاقة","المعارج","نوح","الجن","المزمل","المدثر","القيامة","الإنسان","المرسلات","النبأ","النازعات","عبس","التكوير","الانفطار","المطففين","الانشقاق","البروج","الطارق","الأعلى","الغاشية","الفجر","البلد","الشمس","الليل","الضحى","الشرح","التين","العلق","القدر","البينة","الزلزلة","العاديات","القارعة","التكاثر","العصر","الهمزة","الفيل","قريش","الماعون","الكوثر","الكافرون","النصر","المسد","الإخلاص","الفلق","الناس"];
+    
+    const qaris = [
+        { name: "سعود الشريم", img: "https://i.ibb.co/93bDqLNn/90.jpg", base: "https://server7.mp3quran.net/shur/" },
+        { name: "عبدالرحمن السديس", img: "https://i.ibb.co/LX5G3DDz/image.jpg", base: "https://server11.mp3quran.net/sds/" },
+        { name: "ماهر المعيقلي", img: "https://i.ibb.co/8CFys3C/011.jpg", base: "https://server12.mp3quran.net/maher/" },
+        { name: "ياسر الدوسري", img: "https://i.ibb.co/pvWz0X3d/22.jpg", base: "https://server11.mp3quran.net/yasser/" },
+        { name: "ناصر القطامي", img: "https://i.ibb.co/0Rmgd7LT/image.jpg", base: "https://server6.mp3quran.net/qtm/" },
+        { name: "محمد المنشاوي", img: "https://i.ibb.co/RT0GBJKf/image.jpg", base: "https://server10.mp3quran.net/minsh/" },
+        { name: "عبدالباسط عبدالصمد", img: "https://i.ibb.co/3Y9t6Fk9/image.jpg", base: "https://server7.mp3quran.net/basit/" },
+        { name: "محمود الحصري", img: "https://i.ibb.co/XqT84ng/image.jpg", base: "https://server13.mp3quran.net/hussary/" }
+    ];
+
+    let currentQariName = "";
+
+    function toggleNightMode() {
+        document.body.classList.toggle('dark-mode');
+        const btn = document.getElementById('nightBtn');
+        btn.innerText = document.body.classList.contains('dark-mode') ? '☀️' : '🌙';
+    }
+
+    function setTheme(accent, body) {
+        document.body.classList.remove('dark-mode');
+        document.getElementById('nightBtn').innerText = '🌙';
+        document.documentElement.style.setProperty('--accent-color', accent);
+        document.documentElement.style.setProperty('--bg-body', body);
+        document.documentElement.style.setProperty('--text-main', accent);
+    }
+
+    function init() {
+        const menu = document.getElementById('qariMenu');
+        menu.innerHTML = qaris.map((q, i) => `
+            <div class="qari-card" onclick="selectQari(${i})">
+                <img src="${q.img}" class="qari-img">
+                <div style="font-weight:bold; color:var(--item-text);">${q.name}</div>
+            </div>
+        `).join('');
+        toggleMenu(); // افتح القائمة عند التشغيل أول مرة
+    }
+
+    function toggleMenu() {
+        const menu = document.getElementById('qariMenu');
+        const selectedArea = document.getElementById('selectedQariArea');
+        
+        if (menu.style.display === 'grid' || selectedArea.style.display === 'block') {
+            menu.style.display = 'none';
+            selectedArea.style.display = 'none';
+        } else {
+            menu.style.display = 'grid';
+        }
+    }
+
+    function selectQari(i) {
+        const q = qaris[i];
+        currentQariName = q.name;
+        document.getElementById('qariMenu').style.display = 'none';
+        document.getElementById('selectedQariArea').style.display = 'block';
+        document.getElementById('mainBtnText').innerText = "القارئ: " + q.name;
+        
+        let html = '';
+        surahNames.forEach((name, idx) => {
+            let num = (idx + 1).toString().padStart(3, '0');
+            html += `<div class="surah-item" onclick="play('${q.base}${num}.mp3', 'سورة ${name}')">
+                <span>سورة ${name}</span>
+                <span style="color:var(--accent-color); font-weight:bold;">#${idx+1}</span>
+            </div>`;
+        });
+        document.getElementById('surahList').innerHTML = html;
+        document.getElementById('scrollArea').scrollTop = 0;
+    }
+
+    const audio = document.getElementById('audio');
+    const pBar = document.getElementById('pBar');
+
+    function play(url, title) {
+        // إخفاء القوائم عند التشغيل
+        document.getElementById('selectedQariArea').style.display = 'none';
+        document.getElementById('qariMenu').style.display = 'none';
+        
+        // إظهار المشغل وتشغيل الصوت
+        pBar.classList.add('active');
+        document.getElementById('pTitle').innerText = title;
+        document.getElementById('pQari').innerText = "بصوت الشيخ: " + currentQariName;
+        audio.src = url;
+        audio.play();
+    }
+
+    function closePlayer() {
+        pBar.classList.remove('active');
+        audio.pause();
+        // عند إغلاق المشغل، نفتح القائمة مرة أخرى لتسهيل الاختيار
+        document.getElementById('qariMenu').style.display = 'grid';
+    }
+
+    init();
+</script>
+</body>
+</html>

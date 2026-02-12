@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>المكتبة الإسلامية - التصميم المعتمد</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Amiri:wght@700&family=Tajawal:wght@400;700&display=swap');
+        
+        :root {
+            --primary: #d4af37;
+            --bg-gradient: radial-gradient(circle at center, #2c2c2c 0%, #111111 100%);
+            --glow: rgba(212, 175, 55, 0.6);
+        }
+
+        body, html {
+            margin: 0; padding: 0; height: 100vh; width: 100%;
+            font-family: 'Tajawal', sans-serif;
+            background: var(--bg-gradient);
+            color: white; overflow: hidden;
+            display: flex; flex-direction: column; align-items: center;
+        }
+
+        /* أيقونة الهندسة التفاعلية (أعلى اليسار) */
+        .engineer-icon {
+            position: absolute; top: 20px; left: 20px;
+            width: 45px; height: 45px; border-radius: 50%;
+            border: 2px solid var(--primary); cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            background: #000; box-shadow: 0 0 15px var(--glow);
+            transition: 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            z-index: 10;
+        }
+        .engineer-icon::before { content: '⚙️'; font-size: 22px; }
+        .engineer-icon:hover { transform: rotate(180deg) scale(1.1); box-shadow: 0 0 25px var(--primary); }
+
+        /* اللوجو الرئيسي الدائري بالصورة الجديدة */
+        .main-logo-area {
+            flex: 1; display: flex; flex-direction: column;
+            align-items: center; justify-content: center;
+            margin-top: 20px;
+        }
+        
+        .circle-logo {
+            width: 170px; height: 170px; 
+            border-radius: 50%; 
+            border: 5px solid var(--primary); 
+            background: #000;
+            overflow: hidden; /* لضمان أن الصورة تكون دائرية */
+            display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 0 40px var(--glow); 
+            transition: 0.5s ease-in-out;
+        }
+        .circle-logo img {
+            width: 100%; height: 100%; object-fit: cover; /* لملء الدائرة بالصورة بشكل مرتب */
+        }
+        .circle-logo:hover { transform: scale(1.05); box-shadow: 0 0 60px var(--primary); }
+
+        h1 {
+            font-family: 'Amiri', serif; font-size: 2.5rem;
+            color: var(--primary); text-shadow: 0 0 15px var(--glow);
+            margin-top: 20px;
+        }
+
+        /* الأزرار السفلية داخل البرواز */
+        .bottom-nav {
+            margin-bottom: 50px; background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(212, 175, 55, 0.4); padding: 15px 40px;
+            border-radius: 60px; box-shadow: 0 15px 35px rgba(0,0,0,0.6);
+            display: flex; gap: 40px;
+        }
+
+        .card { cursor: pointer; text-align: center; transition: 0.4s; }
+        .mini-btn {
+            width: 75px; height: 75px; border: 2px solid var(--primary);
+            border-radius: 50%; display: flex; align-items: center;
+            justify-content: center; background: #000;
+            transition: 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .mini-btn img { width: 45px; height: 45px; border-radius: 50%; }
+        
+        .card:hover { transform: translateY(-8px); }
+        .card:hover .mini-btn { transform: rotate(360deg) scale(1.1); box-shadow: 0 0 25px var(--primary); }
+        .card span { color: var(--primary); font-weight: bold; font-size: 0.85rem; display: block; margin-top: 8px; }
+
+        /* نافذة العرض وسر الإغلاق */
+        #appOverlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; display: none; z-index: 1000; }
+        .close-icon {
+            position: absolute; top: 15px; right: 15px;
+            width: 32px; height: 32px; background: rgba(177, 58, 58, 0.9);
+            color: white; border-radius: 50%; display: flex;
+            align-items: center; justify-content: center;
+            cursor: pointer; font-size: 16px; font-weight: bold;
+            z-index: 9999; transition: 0.3s;
+        }
+        .close-icon:hover { transform: scale(1.2) rotate(90deg); background: #ff0000; }
+        iframe { width: 100%; height: 100%; border: none; }
+
+        /* نافذة المصمم */
+        .designer-modal {
+            position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0);
+            width: 270px; background: #1a1a1a; border: 2px solid var(--primary);
+            border-radius: 20px; padding: 25px; text-align: center;
+            z-index: 2000; transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 0 60px rgba(0,0,0,1);
+        }
+        .designer-modal.active { transform: translate(-50%, -50%) scale(1); }
+        .close-modal-btn { background: var(--primary); color: #000; padding: 6px 20px; border-radius: 10px; cursor: pointer; font-weight: bold; margin-top: 15px; display: inline-block; }
+    </style>
+</head>
+<body>
+
+    <div class="engineer-icon" onclick="toggleModal()"></div>
+
+    <div class="designer-modal" id="designerModal">
+        <div style="font-size: 40px; margin-bottom: 10px;">⚙️</div>
+        <h2 style="color: var(--primary); margin: 0;"> المطور</h2>
+        <p style="color: #bbb; font-size: 0.9rem; line-height: 1.5;">تم تصميم هذا النظام ليكون مرجعاً للقران سهلاً ومبسطاً.<br> صدقه عن والدية الله لايحرمكم ولا يحرمني الاجر نسألكم الدعاء.</p>
+        <p style="color: #bbb; font-size: 0.9rem; line-height: 1.5;">مع تحيات / محمد العلالي<br>لتواصل 0505453376</p>
+
+        <div class="close-modal-btn" onclick="toggleModal()">إغلاق</div>
+    </div>
+
+    <div class="main-logo-area">
+        <div class="circle-logo">
+            <img src="https://i.ibb.co/KxGmJCZF/21.jpg" alt="لوجو المصحف">
+        </div>
+        <h1>المكتبة الإسلامية</h1>
+    </div>
+
+    <div class="bottom-nav">
+        <div class="card" onclick="runApp('quran.html')">
+            <div class="mini-btn"><img src="https://i.ibb.co/8LXwwR6Q/images.jpg"></div>
+            <span>مصحف النخبة</span>
+        </div>
+        <div class="card" onclick="runApp('repeat.html')">
+            <div class="mini-btn"><img src="https://i.ibb.co/8LXwwR6Q/images.jpg"></div>
+            <span>مصحف التكرار</span>
+        </div>
+    </div>
+
+    <div id="appOverlay">
+        <div class="close-icon" onclick="closeApp()">✕</div>
+        <iframe id="appFrame"></iframe>
+    </div>
+
+    <script>
+        function runApp(url) {
+            document.getElementById('appFrame').src = url;
+            document.getElementById('appOverlay').style.display = 'block';
+        }
+        function closeApp() {
+            document.getElementById('appOverlay').style.display = 'none';
+            document.getElementById('appFrame').src = '';
+        }
+        function toggleModal() {
+            document.getElementById('designerModal').classList.toggle('active');
+        }
+    </script>
+</body>
+</html>

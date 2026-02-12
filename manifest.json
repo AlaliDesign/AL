@@ -1,0 +1,20 @@
+{
+  "short_name": "مصحف التكرار",
+  "name": "مصحف تكرار السور والآيات",
+  "icons": [
+    {
+      "src": "https://i.ibb.co/8LXwwR6Q/images.jpg",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "https://i.ibb.co/8LXwwR6Q/images.jpg",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "start_url": "index.html",
+  "display": "standalone",
+  "theme_color": "#b7903c",
+  "background_color": "#e3d5b8"
+}
